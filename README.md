@@ -123,7 +123,7 @@ OpenClaw Gateway real-time monitoring dashboard — displays OpenClaw Agent's to
 
 ### Preview
 
-![OpenClaw Monitor Screenshot](screenshot.png)
+![OpenClaw Monitor Screenshot](screenshot-en.png)
 
 ### Features
 
