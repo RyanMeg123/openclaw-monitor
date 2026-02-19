@@ -86,6 +86,38 @@ python3 server.py --no-open
 - macOS / Linux（Windows 需要 WSL）
 - 已安装并运行 [OpenClaw](https://openclaw.ai)
 
+### 故障排查
+
+**问题：启动后显示 "OpenClaw 目录不存在" 或 "Gateway 日志不存在"**
+
+1. **确认 OpenClaw 已安装**
+   ```bash
+   openclaw status
+   ```
+   如果命令找不到，请先安装 OpenClaw。
+
+2. **确认 OpenClaw 已运行过**
+   - 首次安装后需要运行一次 `openclaw` 命令
+   - 确保生成了 `~/.openclaw/logs/gateway.log` 文件
+
+3. **OpenClaw 安装在非标准位置**
+   ```bash
+   # 指定自定义 OpenClaw 目录
+   python3 server.py --openclaw-dir /path/to/.openclaw
+   ```
+
+4. **检查自动检测结果**
+   ```bash
+   python3 server.py
+   # 查看启动时显示的 "OpenClaw 目录" 路径是否正确
+   ```
+
+**问题：监控面板没有数据显示**
+
+1. 确认 OpenClaw 正在运行（有活跃的对话）
+2. 检查浏览器开发者工具 Console 是否有错误
+3. 确认访问的是 `http://127.0.0.1:19999`，不是 `file://` 协议
+
 ### 目录结构
 
 ```
@@ -185,6 +217,38 @@ python3 server.py --no-open
 - Python 3.7+
 - macOS / Linux (Windows requires WSL)
 - [OpenClaw](https://openclaw.ai) installed and running
+
+### Troubleshooting
+
+**Problem: Shows "OpenClaw directory does not exist" or "Gateway log not found"**
+
+1. **Confirm OpenClaw is installed**
+   ```bash
+   openclaw status
+   ```
+   If command not found, please install OpenClaw first.
+
+2. **Confirm OpenClaw has been run**
+   - After first installation, need to run `openclaw` command once
+   - Ensure `~/.openclaw/logs/gateway.log` file is generated
+
+3. **OpenClaw installed in non-standard location**
+   ```bash
+   # Specify custom OpenClaw directory
+   python3 server.py --openclaw-dir /path/to/.openclaw
+   ```
+
+4. **Check auto-detection result**
+   ```bash
+   python3 server.py
+   # Check if the "OpenClaw directory" path shown at startup is correct
+   ```
+
+**Problem: Monitor panel shows no data**
+
+1. Confirm OpenClaw is running (has active conversations)
+2. Check browser developer tools Console for errors
+3. Ensure accessing via `http://127.0.0.1:19999`, not `file://` protocol
 
 ### Directory Structure
 

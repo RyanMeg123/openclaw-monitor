@@ -23,7 +23,31 @@ def find_openclaw_dir():
     for c in candidates:
         if os.path.isdir(c):
             return c
+    # 如果没有找到，返回第一个候选并打印警告
     return candidates[0]
+
+
+def check_openclaw_installation(openclaw_dir):
+    """检查 OpenClaw 是否正确安装和运行"""
+    issues = []
+    
+    if not os.path.isdir(openclaw_dir):
+        issues.append(f"❌ OpenClaw 目录不存在: {openclaw_dir}")
+        issues.append("   请确认已安装 OpenClaw: https://openclaw.ai")
+        return issues
+    
+    gateway_log = os.path.join(openclaw_dir, "logs", "gateway.log")
+    session_dir = os.path.join(openclaw_dir, "agents", "main", "sessions")
+    
+    if not os.path.exists(gateway_log):
+        issues.append(f"❌ Gateway 日志不存在: {gateway_log}")
+        issues.append("   请确认 OpenClaw 已运行过一次")
+    
+    if not os.path.isdir(session_dir):
+        issues.append(f"❌ 会话目录不存在: {session_dir}")
+        issues.append("   请确认 OpenClaw 已运行并创建过会话")
+    
+    return issues
 
 
 def get_paths(openclaw_dir):
@@ -194,13 +218,25 @@ def main():
     paths = get_paths(openclaw_dir)
     agent_name = read_agent_name(openclaw_dir)
 
+    # 检查 OpenClaw 安装状态
+    issues = check_openclaw_installation(openclaw_dir)
+
     print(f"\n🦞 OpenClaw Monitor")
     print(f"━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━")
+    print(f"  当前用户:      {os.environ.get('USER') or os.environ.get('USERNAME') or 'unknown'}")
     print(f"  Agent 名称:    {agent_name}")
     print(f"  OpenClaw 目录: {openclaw_dir}")
     print(f"  Gateway 日志:  {'✓' if os.path.exists(paths['gateway_log']) else '✗ 未找到'} {paths['gateway_log']}")
     print(f"  会话目录:      {'✓' if os.path.isdir(paths['session_dir']) else '✗ 未找到'} {paths['session_dir']}")
     print(f"  监控面板:      http://127.0.0.1:{args.port}")
+    
+    if issues:
+        print(f"\n⚠️  发现问题:")
+        for issue in issues:
+            print(f"   {issue}")
+        print(f"\n💡 提示: 如果 OpenClaw 安装在其他位置，请使用:")
+        print(f"   python3 server.py --openclaw-dir /path/to/.openclaw")
+    
     print(f"━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n")
 
     server = HTTPServer(("127.0.0.1", args.port), MonitorHandler)
