@@ -288,8 +288,7 @@ footer a:hover{color:var(--text2)}
       </div>
       <div class="chrome-url">127.0.0.1:19999 — OpenClaw Monitor</div>
     </div>
-    <img src="./image.png" alt="">
-    <img id="screenshot-img" src="image-cn.png" class="screenshot-img">
+    <img id="screenshot-img" src="image-cn.png" class="screenshot-img" alt="Screenshot">
   </div>
 </div>
 
@@ -494,6 +493,12 @@ function setLang(lang) {
   document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
   document.querySelector(`.lang-btn[onclick="setLang(\'${lang}\')"]`).classList.add('active');
   localStorage.setItem('oc-lang', lang);
+  
+  // Update screenshot image based on language
+  const screenshotImg = document.getElementById('screenshot-img');
+  if (screenshotImg) {
+    screenshotImg.src = lang === 'zh' ? 'image-cn.png' : 'image.png';
+  }
 }
 
 // restore saved lang
