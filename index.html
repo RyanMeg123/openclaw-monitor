@@ -1,11 +1,59 @@
 <!DOCTYPE html>
 <html lang="zh">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OpenClaw Monitor — See Your AI Agent Live</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;1,400;1,500&family=Geist+Mono:wght@300;400;500;600&family=Geist:wght@300;400;500;600&display=swap" rel="stylesheet">
+ <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- ✅ 基础 SEO -->
+  <title>OpenClaw Monitor — See Your AI Agent Live</title>
+  <meta name="description" content="OpenClaw Monitor reads local logs and surfaces every tool call, conversation, and token spent by your AI Agent — in real time, right in your browser. Free, open source, zero dependencies." />
+  <meta name="keywords" content="OpenClaw, AI Agent Monitor, Claude, LLM monitoring, token usage, tool call, open source, real-time log" />
+  <meta name="author" content="RyanMeg123" />
+  <link rel="canonical" href="https://ryanmeg123.github.io/openclaw-monitor/" />
+
+  <!-- ✅ Open Graph（分享到微信、推特、Discord 等时显示卡片） -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://ryanmeg123.github.io/openclaw-monitor/" />
+  <meta property="og:title" content="OpenClaw Monitor — See Your AI Agent Live" />
+  <meta property="og:description" content="Real-time monitoring for OpenClaw AI agents. Track every tool call, token spent, and conversation — locally, free, and open source." />
+  <meta property="og:image" content="https://ryanmeg123.github.io/openclaw-monitor/screenshot.png" />
+  <meta property="og:locale" content="zh_CN" />
+  <meta property="og:locale:alternate" content="en_US" />
+
+  <!-- ✅ Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="OpenClaw Monitor — See Your AI Agent Live" />
+  <meta name="twitter:description" content="Real-time monitoring for OpenClaw AI agents. Track every tool call, token spent, and conversation — locally, free, and open source." />
+  <meta name="twitter:image" content="https://ryanmeg123.github.io/openclaw-monitor/screenshot.png" />
+
+  <!-- ✅ Favicon（多尺寸兼容所有浏览器） -->
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon-16x16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="apple-touch-icon.png" />
+  <link rel="shortcut icon" href="favicon.ico" />
+
+  <!-- ✅ 结构化数据（让 Google 显示富文本结果） -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "OpenClaw Monitor",
+    "url": "https://ryanmeg123.github.io/openclaw-monitor/",
+    "description": "Real-time monitoring dashboard for OpenClaw AI agents. Track tool calls, token usage, and conversations locally.",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "macOS, Windows, Linux",
+    "offers": {
+      "@type": "Offer",
+      "price": "0",
+      "priceCurrency": "USD"
+    },
+    "author": {
+      "@type": "Person",
+      "name": "RyanMeg123",
+      "url": "https://github.com/RyanMeg123"
+    }
+  }
+  </script>
 <style>
 :root {
   --bg:#faf9f7; --bg2:#f2f0ec; --bg3:#e8e5df;
