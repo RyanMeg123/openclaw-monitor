@@ -4,6 +4,10 @@ OpenClaw Gateway 实时监控面板 — 通过读取本地日志文件，实时�
 
 ![预览](https://img.shields.io/badge/Python-3.7%2B-blue) ![License](https://img.shields.io/badge/license-MIT-green)
 
+## 预览
+
+![OpenClaw Monitor 截图](screenshot.png)
+
 ## 功能
 
 - **实时日志流** — 每3秒读取 `gateway.log`，显示 tavily 搜索、API 请求等
@@ -18,7 +22,7 @@ OpenClaw Gateway 实时监控面板 — 通过读取本地日志文件，实时�
 ### 方式一：直接运行（推荐）
 
 ```bash
-git clone https://github.com/你的用户名/openclaw-monitor.git
+git clone https://github.com/RyanMeg123/openclaw-monitor.git
 cd openclaw-monitor
 python3 server.py
 ```
@@ -28,7 +32,7 @@ python3 server.py
 ### 方式二：安装为命令行工具
 
 ```bash
-git clone https://github.com/你的用户名/openclaw-monitor.git
+git clone https://github.com/RyanMeg123/openclaw-monitor.git
 cd openclaw-monitor
 pip3 install -e .
 
@@ -98,5 +102,3 @@ openclaw-monitor/
 ## License
 
 MIT
-# openclaw-monitor
-# openclaw-monitor

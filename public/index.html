@@ -508,10 +508,11 @@
   /* Memory usage */
   .memory-display {
     padding: 14px 16px;
-    height: 240px;
+    height: 360px;
+    overflow-y: auto;
     display: flex;
     flex-direction: column;
-    gap: 14px;
+    gap: 10px;
   }
 
   .memory-bar-wrap {
@@ -678,14 +679,24 @@
     <div class="logo">
       <div class="logo-icon">🦞</div>
       <div class="logo-text">
-        <h1>Ryan's Suit Monitor</h1>
-        <span>OpenClaw · 全栈调用监控中枢</span>
+        <h1 id="suitTitle" style="cursor:default;">Ryan's Suit Monitor</h1>
+        <span id="suitSubtitle">OpenClaw · 全栈调用监控中枢</span>
       </div>
+      <div id="nameEditWrap" style="margin-left:12px;display:none;align-items:center;gap:6px;">
+        <input id="nameEditInput" type="text" placeholder="输入你的名字"
+          style="background:var(--surface2);border:1px solid var(--accent);color:var(--text);font-family:var(--mono);font-size:12px;padding:4px 8px;border-radius:6px;outline:none;width:130px;" />
+        <button onclick="saveName()" style="font-size:10px;color:var(--accent);border:1px solid rgba(0,255,136,0.3);background:rgba(0,255,136,0.05);padding:4px 8px;border-radius:6px;cursor:pointer;font-family:var(--mono);">保存</button>
+        <button onclick="cancelEditName()" style="font-size:10px;color:var(--text2);border:1px solid var(--border);background:none;padding:4px 8px;border-radius:6px;cursor:pointer;font-family:var(--mono);">取消</button>
+      </div>
+      <button onclick="editName()" id="nameEditBtn" title="修改名字"
+        style="margin-left:8px;background:none;border:1px solid var(--border);color:var(--text2);font-size:10px;padding:3px 8px;border-radius:6px;cursor:pointer;font-family:var(--mono);transition:all 0.2s;"
+        onmouseover="this.style.color='var(--accent)';this.style.borderColor='rgba(0,255,136,0.3)'"
+        onmouseout="this.style.color='var(--text2)';this.style.borderColor='var(--border)'">✏️ 改名</button>
     </div>
     <div class="header-right">
       <div class="connect-row">
         <span style="font-size:10px;color:var(--text2);white-space:nowrap;">日志服务</span>
-        <input class="gateway-input" id="logApiUrl" value="" placeholder="自动检测..." style="width:220px;" />
+        <input class="gateway-input" id="logApiUrl" value="http://127.0.0.1:19999/logs" placeholder="http://127.0.0.1:19999/logs" style="width:220px;" />
         <button class="btn-connect" onclick="startPolling()">开始监控</button>
         <button class="btn-connect" onclick="stopPolling()" style="color:var(--danger);border-color:rgba(255,45,85,0.3);background:rgba(255,45,85,0.05);">停止</button>
       </div>
@@ -696,6 +707,41 @@
       <div class="time-display" id="clock">--:--:--</div>
     </div>
   </header>
+
+  <!-- Spending + Model 状态条 -->
+  <div style="display:flex;align-items:stretch;gap:0;margin-bottom:20px;background:var(--surface);border:1px solid var(--border);border-radius:12px;overflow:hidden;">
+    <!-- Spending -->
+    <div style="display:flex;align-items:center;gap:14px;padding:14px 24px;flex:1;border-right:1px solid var(--border);">
+      <div style="width:36px;height:36px;background:rgba(0,255,136,0.1);border:1px solid rgba(0,255,136,0.2);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;">💰</div>
+      <div>
+        <div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:var(--text2);margin-bottom:4px;">SPENDING</div>
+        <div style="font-family:var(--sans);font-size:22px;font-weight:800;color:var(--accent);line-height:1;" id="headerCostTotal">$0.00</div>
+      </div>
+      <div style="margin-left:16px;display:flex;flex-direction:column;gap:3px;">
+        <div style="font-size:10px;color:var(--text2);">今日: <span id="headerCostDay" style="color:var(--text);">$0.00</span></div>
+        <div style="font-size:10px;color:var(--text2);">本月: <span id="headerCostMonth" style="color:var(--text);">$0.00</span></div>
+      </div>
+    </div>
+    <!-- Token 快览 -->
+    <div style="display:flex;align-items:center;gap:20px;padding:14px 24px;border-right:1px solid var(--border);">
+      <div>
+        <div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:var(--text2);margin-bottom:4px;">TOKENS</div>
+        <div style="font-family:var(--sans);font-size:18px;font-weight:700;color:var(--text);line-height:1;" id="headerTokenTotal">—</div>
+      </div>
+      <div style="display:flex;flex-direction:column;gap:3px;">
+        <div style="font-size:10px;color:var(--text2);">输入: <span id="headerTokenIn" style="color:var(--text);">—</span></div>
+        <div style="font-size:10px;color:var(--accent2);">输出: <span id="headerTokenOut" style="color:var(--accent2);">—</span></div>
+      </div>
+    </div>
+    <!-- Model -->
+    <div style="display:flex;align-items:center;gap:14px;padding:14px 24px;">
+      <div style="width:36px;height:36px;background:rgba(124,58,255,0.1);border:1px solid rgba(124,58,255,0.2);border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;">🤖</div>
+      <div>
+        <div style="font-size:9px;text-transform:uppercase;letter-spacing:2px;color:var(--text2);margin-bottom:4px;">MODEL</div>
+        <div style="font-family:var(--sans);font-size:15px;font-weight:700;color:var(--accent2);line-height:1;" id="headerModel">kimi-k2.5</div>
+      </div>
+    </div>
+  </div>
 
   <!-- Stats -->
   <div class="stats-row">
@@ -812,15 +858,43 @@
         </div>
       </div>
       <div class="memory-display">
+
+        <!-- 模型 -->
+        <div class="config-row" style="padding-bottom:10px;border-bottom:1px solid var(--border);margin-bottom:8px;">
+          <span class="config-key">当前模型</span>
+          <span class="config-val" id="modelDisplay" style="color:var(--accent);font-weight:600;">moonshot/kimi-k2.5</span>
+        </div>
+
+        <!-- Token 本次用量进度条 -->
         <div class="memory-bar-wrap">
           <div class="memory-bar-header">
-            <span class="memory-bar-label">API Token 用量</span>
+            <span class="memory-bar-label">本次 Token 用量</span>
             <span class="memory-bar-val" id="tokenVal">-- / 256k</span>
           </div>
           <div class="memory-bar-bg">
             <div class="memory-bar-fill green" id="tokenBar" style="width:0%"></div>
           </div>
         </div>
+
+        <!-- Token 明细 -->
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:8px 0;padding:8px;background:var(--surface2);border-radius:8px;border:1px solid var(--border);">
+          <div style="font-size:10px;color:var(--text2);">输入 tokens</div>
+          <div style="font-size:11px;color:var(--text);text-align:right;" id="tokenIn">—</div>
+          <div style="font-size:10px;color:var(--text2);">输出 tokens</div>
+          <div style="font-size:11px;color:var(--accent2);text-align:right;" id="tokenOut">—</div>
+          <div style="font-size:10px;color:var(--text2);">缓存命中</div>
+          <div style="font-size:11px;color:#00a0ff;text-align:right;" id="tokenCache">—</div>
+          <div style="font-size:10px;color:var(--text2);">对话轮次</div>
+          <div style="font-size:11px;color:var(--text);text-align:right;" id="turnCount">0</div>
+        </div>
+
+        <!-- 累计费用 -->
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 10px;background:var(--surface2);border-radius:8px;border:1px solid rgba(0,255,136,0.15);margin-bottom:8px;">
+          <span style="font-size:10px;color:var(--text2);">💰 累计费用</span>
+          <span style="font-size:16px;font-weight:800;color:var(--accent);font-family:var(--sans);" id="costTotal">¥0.0000</span>
+        </div>
+
+        <!-- Shell 频率 -->
         <div class="memory-bar-wrap">
           <div class="memory-bar-header">
             <span class="memory-bar-label">Shell 调用频率</span>
@@ -830,6 +904,7 @@
             <div class="memory-bar-fill orange" id="shellRateBar" style="width:0%"></div>
           </div>
         </div>
+
         <div class="config-row" style="border-top:1px solid var(--border);padding-top:10px;">
           <span class="config-key">Shell 执行预警阈值</span>
           <span class="config-val">≥ <input id="shellThreshold" type="number" value="5" min="1" max="50"
@@ -843,13 +918,9 @@
           <span class="config-key">文件删除预警</span>
           <label class="toggle"><input type="checkbox" id="deleteAlert" checked><div class="toggle-slider"></div></label>
         </div>
-        <div class="config-row">
+        <div class="config-row" style="border:none">
           <span class="config-key">浏览器通知</span>
           <label class="toggle"><input type="checkbox" id="notifyAlert" onchange="requestNotify()"><div class="toggle-slider"></div></label>
-        </div>
-        <div class="config-row" style="border:none">
-          <span class="config-key">Gateway 模型</span>
-          <span class="config-val" id="modelDisplay">moonshot/kimi-k2.5</span>
         </div>
       </div>
     </div>
@@ -868,6 +939,11 @@ const state = {
   activityLabels: [],
   shellPerMin: 0,
   shellCountWindow: [],
+  // token & cost 累计
+  tokenTotal: { input: 0, output: 0, cacheRead: 0, total: 0 },
+  costTotal: 0,
+  currentModel: 'moonshot/kimi-k2.5',
+  turnCount: 0,
 };
 
 // ─── Clock ───────────────────────────────────────────────
@@ -942,12 +1018,11 @@ let lastSessionMsgId = null;
 function connectGateway() { startPolling(); }
 
 function startPolling() {
-  // 自动检测服务器地址：如果是从本地服务器打开，用同源；否则用默认
   const origin = window.location.origin.startsWith('http') && !window.location.protocol.startsWith('file')
-    ? window.location.origin
-    : 'http://127.0.0.1:19999';
-  const base = document.getElementById('logApiUrl')?.value.trim() || origin;
-  const apiBase = base.replace(/\/logs$/, '').replace(/\/$/, '');
+    ? window.location.origin : 'http://127.0.0.1:19999';
+  const inputVal = document.getElementById('logApiUrl')?.value.trim() || '';
+  const apiBase = (inputVal || origin).replace(/\/logs$/, '').replace(/\/$/, '');
+
   if (pollingTimer) clearInterval(pollingTimer);
   if (sessionTimer) clearInterval(sessionTimer);
   lastLogLines.clear();
@@ -956,8 +1031,19 @@ function startPolling() {
   state.connected = true;
   setStatus(true);
   addLog('info', 'system', 'SYS', '日志监控已启动 — 读取对话 & gateway 日志');
+
+  // 拉取用户配置，更新名字和模型
+  fetch(apiBase + '/config').then(r => r.json()).then(cfg => {
+    const name = cfg.agentName || cfg.systemUser || 'My Suit';
+    document.querySelector('.logo-text h1').textContent = name + ' Monitor';
+    document.title = name + ' Monitor';
+    if (cfg.model) updateModel(cfg.model);
+    addLog('info', 'system', 'CFG', `Agent: ${name} | 模型: ${cfg.model || '—'}`);
+  }).catch(() => {});
+
   fetchLogs(apiBase + '/logs', true);
   fetchSession(apiBase + '/session', true);
+  loadConfig(apiBase);
   pollingTimer = setInterval(() => fetchLogs(apiBase + '/logs', false), 3000);
   sessionTimer = setInterval(() => fetchSession(apiBase + '/session', false), 2000);
 }
@@ -996,6 +1082,62 @@ async function fetchLogs(url, isInit) {
       addLog('error', 'system', 'ERR', '日志服务断开: ' + e.message);
       addAlert('critical', '日志服务断开', '请确认 log-server.py 正在运行');
     }
+  }
+}
+
+async function loadConfig(base) {
+  try {
+    const res = await fetch(base + '/config');
+    if (!res.ok) return;
+    const cfg = await res.json();
+    if (cfg.agentName) applyName(cfg.agentName);
+  } catch(e) { /* 静默失败 */ }
+}
+
+function applyName(name) {
+  document.title = `${name}'s Suit — 监控中枢`;
+  const h1 = document.getElementById('suitTitle');
+  if (h1) h1.textContent = `${name}'s Suit Monitor`;
+  const sub = document.getElementById('suitSubtitle');
+  if (sub) sub.textContent = `OpenClaw · ${name} 的全栈调用监控中枢`;
+  const hm = document.getElementById('headerModel');
+  // 不覆盖 model 显示
+}
+
+function editName() {
+  const wrap = document.getElementById('nameEditWrap');
+  const btn = document.getElementById('nameEditBtn');
+  const input = document.getElementById('nameEditInput');
+  // 预填当前名字
+  const current = document.getElementById('suitTitle')?.textContent.replace("'s Suit Monitor", '') || '';
+  input.value = current;
+  wrap.style.display = 'flex';
+  btn.style.display = 'none';
+  input.focus();
+  input.select();
+}
+
+function cancelEditName() {
+  document.getElementById('nameEditWrap').style.display = 'none';
+  document.getElementById('nameEditBtn').style.display = '';
+}
+
+async function saveName() {
+  const name = document.getElementById('nameEditInput').value.trim();
+  if (!name) return;
+  try {
+    const base = window.location.origin.startsWith('http') && !window.location.protocol.startsWith('file')
+      ? window.location.origin : 'http://127.0.0.1:19999';
+    await fetch(base + '/name', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name })
+    });
+    applyName(name);
+    cancelEditName();
+    addLog('info', 'system', 'SYS', `名字已更新为: ${name}`);
+  } catch(e) {
+    addLog('error', 'system', 'ERR', '保存名字失败: ' + e.message);
   }
 }
 
@@ -1044,13 +1186,15 @@ function parseSessionMsg(msg, isNew) {
     // token 用量
     const usage = msg.message.usage;
     if (usage?.totalTokens) {
-      updateTokens(usage.totalTokens, 256000);
+      updateTokenDetail(usage);
       if (isNew) {
-        const cost = usage.cost?.total ? `￥${usage.cost.total.toFixed(4)}` : '免费';
+        const cost = usage.cost?.total ? `¥${usage.cost.total.toFixed(4)}` : '免费';
         addLog('info', 'agent', 'TOK',
-          `tokens: ${usage.totalTokens.toLocaleString()} (in:${usage.input} out:${usage.output}) ${cost}`);
+          `tokens: ${usage.totalTokens.toLocaleString()} (in:${usage.input} out:${usage.output} cache:${usage.cacheRead||0}) ${cost}`);
       }
     }
+    // 更新模型
+    if (msg.message.model) updateModel(msg.message.model);
   } else if (role === 'user' && isNew) {
     // 用户消息（来自 Telegram）
     const textBlock = content.find(b => b.type === 'text');
@@ -1220,6 +1364,63 @@ function updateTokens(used, max) {
   document.getElementById('tokenVal').textContent = `${used.toLocaleString()} / ${(max/1000).toFixed(0)}k`;
   document.getElementById('tokenBar').style.width = pct + '%';
   document.getElementById('tokenBar').className = 'memory-bar-fill ' + (pct > 80 ? 'orange' : 'green');
+}
+
+function updateTokenDetail(usage) {
+  if (!usage) return;
+  state.tokenTotal.input += usage.input || 0;
+  state.tokenTotal.output += usage.output || 0;
+  state.tokenTotal.cacheRead += usage.cacheRead || 0;
+  state.tokenTotal.total += usage.totalTokens || 0;
+  state.turnCount++;
+
+  // 本次进度条
+  updateTokens(usage.totalTokens || 0, 256000);
+
+  // 右下角明细
+  document.getElementById('tokenIn').textContent = state.tokenTotal.input.toLocaleString();
+  document.getElementById('tokenOut').textContent = state.tokenTotal.output.toLocaleString();
+  document.getElementById('tokenCache').textContent = state.tokenTotal.cacheRead.toLocaleString();
+  document.getElementById('turnCount').textContent = state.turnCount;
+
+  // 顶部 token 快览
+  document.getElementById('headerTokenTotal').textContent = state.tokenTotal.total.toLocaleString();
+  document.getElementById('headerTokenIn').textContent = state.tokenTotal.input.toLocaleString();
+  document.getElementById('headerTokenOut').textContent = state.tokenTotal.output.toLocaleString();
+
+  // 费用
+  if (usage.cost?.total != null) {
+    state.costTotal += usage.cost.total;
+  }
+
+  const fmt = (n) => n === 0 ? '$0.00' : `¥${n.toFixed(4)}`;
+  const color = state.costTotal > 10 ? 'var(--warn)' : 'var(--accent)';
+
+  // 顶部费用
+  const headerCost = document.getElementById('headerCostTotal');
+  headerCost.textContent = fmt(state.costTotal);
+  headerCost.style.color = color;
+  // 今日/本月暂用累计值（session无法区分日期）
+  document.getElementById('headerCostDay').textContent = fmt(state.costTotal);
+  document.getElementById('headerCostMonth').textContent = fmt(state.costTotal);
+
+  // 右下角费用
+  const costEl = document.getElementById('costTotal');
+  if (costEl) {
+    costEl.textContent = state.costTotal === 0 ? '¥0.0000 (免费额度)' : fmt(state.costTotal);
+    costEl.style.color = color;
+  }
+}
+
+function updateModel(model) {
+  if (!model || model === state.currentModel) return;
+  state.currentModel = model;
+  // 右下角
+  const el = document.getElementById('modelDisplay');
+  if (el) el.textContent = model;
+  // 顶部
+  const hel = document.getElementById('headerModel');
+  if (hel) hel.textContent = model.replace('moonshot/', '').replace('openai/', '');
 }
 
 function addLog(level, source, tag, msg) {
